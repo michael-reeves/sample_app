@@ -1,6 +1,8 @@
 SampleApp::Application.routes.draw do
-  get "users/new"
-  
+  # map all users actions needed for RESTful design
+  # and a number of named routes
+  resources :users
+
   root 'static_pages#home'
   match '/signup',  to: 'users#new',             via: 'get'
   match '/help',    to: 'static_pages#help',     via: 'get'
