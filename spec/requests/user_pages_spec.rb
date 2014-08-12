@@ -16,7 +16,7 @@ describe "UserPages" do
     before { visit signup_path }
     
     it { should have_content( "Sign up" ) }
-    it { should have_title( full_title('Sign up') )  }
+    it { should have_title( full_title( 'Sign up' ) )  }
   end
   
   
@@ -24,12 +24,7 @@ describe "UserPages" do
   describe "signup" do
     before { visit signup_path }
     
-    let( :submit )            { "Create my account" }
-    let( :fill_name )         { fill_in "Name",         with: "Example User" }
-    let( :fill_email )        { fill_in "Email",        with: "user@example.com" }
-    let( :fill_password )     { fill_in "Password",     with: "foobar" }
-    let( :fill_confirmation ) { fill_in "Confirmation", with: "foobar" }
-    let( :fill_mismatch )     { fill_in "Confirmation", with: "barbaz" }
+    let( :submit ) { "Create my account" }
     
     
     describe "with invalid information" do
@@ -51,30 +46,20 @@ describe "UserPages" do
       
       describe "after submission with password mismatch" do
         before do
-          fill_name
-          fill_email
-          fill_password
-          fill_mismatch
-        
+          fill_signup_with_password_mismatch
           click_button submit
         end
       
         it { should have_title( 'Sign up' ) }
         it { should have_content( 'error' ) }
         it { should have_content( "doesn't match") }
-      
       end
       
     end
     
     
     describe "with valid information" do
-      before do
-        fill_name
-        fill_email
-        fill_password
-        fill_confirmation
-      end
+      before { fill_signup_with_valid_data }
       
       it "should create a user" do
         expect { click_button submit }.to change( User, :count ).by(1)
@@ -86,7 +71,8 @@ describe "UserPages" do
         
         it { should have_link( 'Sign out' ) }
         it { should have_title( user.name ) }
-        it { should have_selector( 'div.alert.alert-success', text: 'Welcome' ) }
+        #it { should have_selector( 'div.alert.alert-success', text: 'Welcome' ) }
+        it { should have_message( 'Welcome' ) }
       end
 
     end

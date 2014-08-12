@@ -16,17 +16,20 @@ describe "Authentication" do
     before { visit signin_path }
     
     describe "with invalid information" do
-      before { click_button "Sign in" }
+      #before { click_button "Sign in" }
+      before { sign_in }
       
-      it{ should have_title( 'Sign in' ) }
+      it { should have_title( 'Sign in' ) }
       # replace should have_selector('div.alert.alert-error')
       # with the custom Matcher have_error_message
-      it{ should have_error_message( 'Invalid' ) }
-      #it{ should have_selector( 'div.alert.alert-error' ) }
+      it { should have_error_message( 'Invalid' ) }
+      #it { should have_selector( 'div.alert.alert-error' ) }
       
       describe 'after visiting another page' do
-        before { click_link "Home" }
-        it { should_not have_selector( 'div.alert.alert-error' ) }
+        #before { click_link "Home" }
+        before { go_home }
+        it { should_not have_error_message( '' ) }
+        #it { should_not have_selector( 'div.alert.alert-error' ) }
       end
       
     end
@@ -41,13 +44,14 @@ describe "Authentication" do
       #  click_button "Sign in"
       #end
       
-      it { should have_title( user.name ) }
-      it { should have_link( 'Profile',     href: user_path( user ) ) }
-      it { should have_link( 'Sign out',    href: signout_path ) }
-      it { should_not have_link( 'Sign in', href: signin_path ) }
+      it { should     have_title( user.name ) }
+      it { should     have_link( 'Profile',  href: user_path( user ) ) }
+      it { should     have_link( 'Sign out', href: signout_path ) }
+      it { should_not have_link( 'Sign in',  href: signin_path ) }
       
       describe "followed by signout" do
-        before { click_link "Sign out" }
+        #before { click_link "Sign out" }
+        before { sign_out }
         it { should have_link( "Sign in" ) }
       end
       
