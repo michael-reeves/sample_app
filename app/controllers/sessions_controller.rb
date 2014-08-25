@@ -8,9 +8,10 @@ class SessionsController < ApplicationController
     user = User.find_by( email: params[ :email ].downcase() )
     
     if user && user.authenticate( params[ :password ] )
-      # Sign the user in and redirect to the user's show page
+      # Sign the user in
       sign_in user
-      redirect_to user
+      # redirect to the user page
+      redirect_back_or user
     else
       # Create an error message and re-render the signin form
       # use flash.now because render does not count as a request

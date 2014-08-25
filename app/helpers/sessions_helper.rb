@@ -32,6 +32,11 @@ module SessionsHelper
   end
   
   
+  def current_user?( user )
+    user == current_user
+  end
+  
+  
   def sign_out
     # change the token in the db to prevent stolen 
     # cookies from providing access
@@ -41,6 +46,18 @@ module SessionsHelper
     cookies.delete( :remember_token )
     # set the user to nil
     self.current_user = nil
+  end
+  
+  
+  # redirect to the previous page, or to the default page
+  def redirect_back_or( default )
+    redirect_to( session[ :return_to ] || default )
+    session.delete( :return_to )
+  end
+  
+  # store the location of the requested url
+  def store_location
+    session[ :return_to ] = request.url if request.get?
   end
   
 end
