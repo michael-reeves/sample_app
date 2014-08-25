@@ -9,7 +9,7 @@ class UsersController < ApplicationController
   end
   
   def create
-    @user = User.new( user_params )
+    @user = User.new( user_params() )
     if @user.save()
       sign_in @user     # automatically sign the user in after registration
       flash[ :success ] = "Welcome to the Sample App!"
@@ -19,6 +19,19 @@ class UsersController < ApplicationController
     end
   end
   
+  def edit
+    @user = User.find( params[:id] )
+  end
+  
+  def update
+    @user = User.find( params[:id] )
+    if @user.update_attributes( user_params )
+      flash[ :success ] = "Profile updated"
+      redirect_to @user
+    else
+      render 'edit'
+    end
+  end
   
   private
   

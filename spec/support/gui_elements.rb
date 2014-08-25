@@ -1,13 +1,14 @@
 # gui actions
 
-def go_home
+def click_go_home
   click_link "Home"
 end
 
-def sign_in
+def click_sign_in
   click_button "Sign in"
 end
 
-def sign_out
+def click_sign_out
   click_link "Sign out"
 end
+
