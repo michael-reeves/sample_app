@@ -60,6 +60,15 @@ end
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
+# Add pagination options
+gem 'will_paginate', '3.0.7'
+gem 'bootstrap-will_paginate', '0.0.10'
+
+# used to generate semi-realistic user names and email addresses
+gem 'faker', '~> 1.4.3'
+
+
+
 # Use unicorn as the app server
 # gem 'unicorn'
 

@@ -1,9 +1,14 @@
 class UsersController < ApplicationController
-  # call signed_in_user before executing the edit and update actions
-  before_action :signed_in_user, only: [ :edit, :update ]
+  # call signed_in_user before executing the index, edit and update actions
+  # this will verify that only signed in users can access these pages
+  before_action :signed_in_user, only: [ :index, :edit, :update ]
   # call correct_user before executing the edit and update actions
   before_action :correct_user,   only: [ :edit, :update ]
   
+  
+  def index
+    @users = User.paginate( page: params[:page] )
+  end
   
   def show
     @user = User.find( params[:id] )
