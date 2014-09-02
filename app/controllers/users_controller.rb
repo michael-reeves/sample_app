@@ -1,9 +1,11 @@
 class UsersController < ApplicationController
   # call signed_in_user before executing the index, edit and update actions
   # this will verify that only signed in users can access these pages
-  before_action :signed_in_user, only: [ :index, :edit, :update ]
+  before_action :signed_in_user, only: [ :index, :edit, :update, :destroy ]
   # call correct_user before executing the edit and update actions
   before_action :correct_user,   only: [ :edit, :update ]
+  # call admin_user before executing the destroy action
+  before_action :admin_user,     only: :destroy
   
   
   def index
@@ -13,6 +15,7 @@ class UsersController < ApplicationController
   def show
     @user = User.find( params[:id] )
   end
+  
   
   def new
     @user = User.new
@@ -29,6 +32,7 @@ class UsersController < ApplicationController
     end
   end
   
+  
   def edit
   end
   
@@ -41,6 +45,13 @@ class UsersController < ApplicationController
     end
   end
 
+  
+  def destroy
+    User.find( params[:id] ).destroy
+    flash[ :success ] = "User deleted."
+    redirect_to users_url
+  end
+  
   
   private
   
@@ -70,5 +81,11 @@ class UsersController < ApplicationController
       @user = User.find( params[:id] )
       redirect_to( root_url ) unless current_user?( @user )
     end
-  
+    
+    # if anyone other than an admin user attempts to access
+    # the destroy action, redirect them to the root page
+    def admin_user
+      redirect_to( root_url ) unless current_user.admin?
+    end
+
 end
