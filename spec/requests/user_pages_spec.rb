@@ -101,6 +101,8 @@ describe "UserPages" do
         it { should have_content( "Email is invalid" ) }
         it { should have_content( "Password can't be blank" ) }
         it { should have_content( "Password is too short" ) }
+        it { should_not have_link( 'Profile' ) }
+        it { should_not have_link( 'Settings' ) }
       end
       
       describe "after submission with password mismatch" do
@@ -139,7 +141,7 @@ describe "UserPages" do
   end
   
   
-  describe "edit page" do
+  describe "edit" do
     let( :user ) { FactoryGirl.create( :user ) }
     before do
       sign_in user
@@ -176,7 +178,24 @@ describe "UserPages" do
       specify { expect( user.reload.name ).to  eq new_name }
       specify { expect( user.reload.email ).to eq new_email }
     end
+    
+    # verify that the admin parameter is not accessible directly
+    describe "forbidden attributes" do
+      let( :params ) do
+        { user: { admin: true, password: user.password,
+                  password_confirmation: user.password } }
+      end
+      
+      before do
+        sign_in( user, no_capybara: true )
+        # pass the parameter list directly to a PATCH request
+        patch user_path( user ), params
+      end
+      
+      specify { expect( user.reload ).not_to be_admin }
+      
+    end
+    
   end
-  
   
 end

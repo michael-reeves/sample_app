@@ -81,6 +81,17 @@ describe "Authentication" do
             expect( page ).to have_title( 'Edit user' )
           end
           
+          describe "when signing in again" do
+            before do
+              click_sign_out
+              sign_in user
+            end
+            
+            it "should render the default (profile) page" do
+              expect(page).to have_title(user.name)
+            end
+          end
+          
         end
         
       end
@@ -97,14 +108,37 @@ describe "Authentication" do
           specify { expect( response ).to redirect_to( signin_path ) }
         end
         
-        describe 'vising the user index' do
+        describe 'visiting the user index' do
           before { visit users_path }
           it { should have_title( 'Sign in' ) }
         end
         
+        describe "after signing in" do 
+          let( :user ) { FactoryGirl.create( :user ) }
+          
+          describe "when visiting the signup page" do
+            before do 
+              sign_in( user )
+              visit signup_path 
+            end
+            it { should have_title( 'All users' ) }
+          end
+          
+          describe "when submitting to the Users#create action" do
+            before do 
+              sign_in( user, no_capybara: true )
+              post( users_path, 
+                   user: FactoryGirl.attributes_for( :user, :email => 'wrong@example.com' ) ) 
+            end
+            specify { expect( response ).to redirect_to( users_path ) }
+          end
+          
+        end
+      
       end
       
     end
+    
     
     # prevent a different user from updating a user's profile
     describe "as wrong user" do
@@ -139,6 +173,16 @@ describe "Authentication" do
       
     end
     
+    # prevent an admin user from deleting themselves
+    describe "as an admin user" do
+      let( :admin_user ) { FactoryGirl.create( :admin ) }
+      
+      before { sign_in( admin_user, no_capybara: true ) }
+      describe "submitting a DELETE request on the Users#destroy action" do
+        before { delete user_path( admin_user ) }
+        specify { expect( response ).to redirect_to( root_url ) }
+      end
+    end
   end
   
 end

@@ -21,11 +21,11 @@ def fill_password( user = nil )
 end
 
 def fill_confirmation 
-  fill_in "Confirmation", with: "foobar" 
+  fill_in "Confirm Password", with: "foobar" 
 end
 
 def fill_mismatch 
-  fill_in "Confirmation", with: "barbaz" 
+  fill_in "Confirm Password", with: "barbaz" 
 end
 
 

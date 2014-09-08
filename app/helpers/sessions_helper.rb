@@ -46,6 +46,8 @@ module SessionsHelper
     cookies.delete( :remember_token )
     # set the user to nil
     self.current_user = nil
+    # remove the return to session variable
+    session.delete( :return_to )
   end
   
   

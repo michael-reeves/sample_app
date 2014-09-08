@@ -7,6 +7,8 @@ class UsersController < ApplicationController
   # call admin_user before executing the destroy action
   before_action :admin_user,     only: :destroy
   
+  before_action :prevent_access, only: [ :new, :create ]
+  
   
   def index
     @users = User.paginate( page: params[:page] )
@@ -47,9 +49,15 @@ class UsersController < ApplicationController
 
   
   def destroy
-    User.find( params[:id] ).destroy
-    flash[ :success ] = "User deleted."
-    redirect_to users_url
+    @user = User.find( params[:id] )
+    # if the current user tries to delete themselves, redirect to root_url
+    if current_user?( @user )
+      redirect_to root_url
+    else
+      @user.destroy
+      flash[ :success ] = "User deleted."
+      redirect_to users_url
+    end
   end
   
   
@@ -57,7 +65,7 @@ class UsersController < ApplicationController
   
     def user_params()
       params.require( :user ).permit( :name, :email, :password,
-                                      :password_confirmation )
+                                      :password_confirmation)
     end
     
     
@@ -86,6 +94,12 @@ class UsersController < ApplicationController
     # the destroy action, redirect them to the root page
     def admin_user
       redirect_to( root_url ) unless current_user.admin?
+    end
+    
+    # prevent a signed in user from accesing the new or create actions
+    # redirect them to the users index page
+    def prevent_access
+      redirect_back_or( users_url ) if signed_in?
     end
 
 end
