@@ -1,4 +1,8 @@
 class User < ActiveRecord::Base
+
+  # create a relationship between users and microposts
+  has_many :microposts, dependent: :destroy
+  
   # not all database adapters use case sensitive indexes, 
   # so downcase the email in the before_save callback
   #before_save { self.email = email.downcase }
