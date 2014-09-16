@@ -1,6 +1,7 @@
 <% provide( :title, "All users" ) %>
 <h1>All users</h1>
 
+<% # will_paginate assumes an @users variable because we're in the Users controller  %>
 <%= will_paginate %>
 
 <ul class="users">
