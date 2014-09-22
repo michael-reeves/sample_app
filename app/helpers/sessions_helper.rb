@@ -37,6 +37,16 @@ module SessionsHelper
   end
   
   
+  # test if the user is signed in 
+  # if not, redirect to the sign in page
+  def signed_in_user
+    unless signed_in?
+      store_location
+      redirect_to( signin_url, notice: "Please sign in." )
+    end
+  end
+
+
   def sign_out
     # change the token in the db to prevent stolen 
     # cookies from providing access

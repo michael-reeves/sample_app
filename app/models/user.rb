@@ -37,6 +37,13 @@ class User < ActiveRecord::Base
   def User.digest( token )
     Digest::SHA1.hexdigest( token.to_s )
   end
+
+  # create an array of posts the user is following
+  def feed
+    # This is preliminary. See "Following users" for the full implementation
+    Micropost.where( "user_id = ?", id )  
+    # using ? ensures that id is properly escaped before submitting the SQL query
+  end
   
   private
   

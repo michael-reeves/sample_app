@@ -5,6 +5,9 @@ SampleApp::Application.routes.draw do
   # use RESTful design to manipulate sessions
   # we only need new, create, and destroy
   resources :sessions, only: [ :new, :create, :destroy ]
+  # micropost routes
+  resources :microposts, only: [ :create, :destroy ]
+  
 
   root 'static_pages#home'
   match '/signup',  to: 'users#new',              via: 'get'

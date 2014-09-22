@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   before_action :correct_user,   only: [ :edit, :update ]
   # call admin_user before executing the destroy action
   before_action :admin_user,     only: :destroy
-  
+  # prevent a signed in user from accessing the new and create actions
   before_action :prevent_access, only: [ :new, :create ]
   
   
@@ -71,18 +71,6 @@ class UsersController < ApplicationController
     
     
     # before filters
-    
-    # test if the user is signed in 
-    # if not, redirect to the sign in page
-    def signed_in_user
-      store_location
-      redirect_to( signin_url, notice: "Please sign in." ) unless signed_in?
-      # equivalent to:
-      # unless signed_in?
-      #   flash[ :notice ] = "Please sign in."
-      #   redirect_to signin_url
-      # end
-    end
     
     # detect if the correct user is trying
     # to edit the user information
