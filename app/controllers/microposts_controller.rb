@@ -1,7 +1,7 @@
 class MicropostsController < ApplicationController
 	# before filter
 	before_action :signed_in_user, only: [ :create, :destroy ]
-	before_action :correct_user, 	 only: [ :destroy ]
+	before_action :correct_user,   only: [ :destroy ]
 
 
 	def create

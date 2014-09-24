@@ -1,7 +1,9 @@
 <%= form_for @micropost do |f| %>
   <%= render 'shared/error_messages', object: f.object %>
+  <div class='counter span3'><span id='chars'>140</span> characters remaining</div>
   <div class='field'>
   	<%= f.text_area :content, placeholder: "Compose new micropost..." %>
   </div>
   <%= f.submit "Post", class: "btn btn-large btn-primary" %>
+  <script type="text/javascript" src='assets/microposts.js'></script>
 <% end %>

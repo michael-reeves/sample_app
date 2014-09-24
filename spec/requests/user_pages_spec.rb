@@ -65,6 +65,12 @@ describe "UserPages" do
   # test the show page
   describe "profile page" do
     let( :user ) { FactoryGirl.create( :user ) }
+    let!( :m0 ) do
+      50.times do
+        content = Faker::Lorem.sentence(5)
+        FactoryGirl.create( :micropost, user: user, content: content )
+      end
+    end
     let!( :m1 ) { FactoryGirl.create( :micropost, user: user, content: "Foo" ) }
     let!( :m2 ) { FactoryGirl.create( :micropost, user: user, content: "Bar" ) }
 
@@ -77,6 +83,17 @@ describe "UserPages" do
       it { should have_content( m1.content ) }
       it { should have_content( m2.content ) }
       it { should have_content( user.microposts.count ) }
+
+      describe "pagination" do
+        
+        it { should have_selector( 'div.pagination') }
+
+        it "should render the user's feed" do
+          user.feed.paginate( page: 1 ).each do |item|
+            expect( page ).to have_selector( "li##{item.id}", text: item.content )
+          end
+        end
+      end
     end
   end
 

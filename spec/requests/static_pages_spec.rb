@@ -23,17 +23,44 @@ describe "StaticPages" do
     describe "for signed-in users" do
       let( :user ) { FactoryGirl.create( :user ) }
       before do
-        FactoryGirl.create( :micropost, user: user, content: "Lorem ipsum" )
-        FactoryGirl.create( :micropost, user: user, content: "Dolor sit amet" )
+        50.times do
+          content = Faker::Lorem.sentence(5)
+          FactoryGirl.create( :micropost, user: user, content: content )
+        end
+        # FactoryGirl.create( :micropost, user: user, content: "Lorem ipsum" )
+        # FactoryGirl.create( :micropost, user: user, content: "Dolor sit amet" )
         sign_in user
         visit root_path
       end
 
-      it "should render the user's feed" do
-        user.feed.each do |item|
-          expect( page ).to have_selector( "li##{item.id}", text: item.content )
+      describe "micropost" do
+        it "should paginate" do
+          expect( page ).to have_selector( 'div.pagination' )
         end
+
+        it "should render the user's feed" do
+          user.microposts.paginate( page: 1 ).each do |item|
+          # user.feed.each do |item|
+            expect( page ).to have_selector( "li##{item.id}", text: item.content )
+          end
+        end
+
+        describe "count" do
+          it { should have_content( user.feed.count ) }
+          it { should have_content( 'microposts' ) }
+
+          describe "when there is only one post" do
+            before do
+              user.microposts.delete_all
+              FactoryGirl.create( :micropost, user: user, content: "Lorem ipsum" )
+            end
+
+            it { should have_content( 'micropost' ) }
+          end
+        end
+
       end
+
     end
   end
   
